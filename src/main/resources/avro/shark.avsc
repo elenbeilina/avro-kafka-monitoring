@@ -6,7 +6,7 @@
   "fields": [
     { "name": "name", "type": "string", "doc": "Shark name" },
     { "name": "average_size", "type": "int", "doc": "Shark average size" },
-    { "name": "type", "type": "string", "doc": "Shark type" },
+    { "name": "order", "type": "string", "doc": "Shark type" },
     { "name": "max_speed", "type": "int", "doc": "Maximum speed that shark can swim" }
   ]
 }
