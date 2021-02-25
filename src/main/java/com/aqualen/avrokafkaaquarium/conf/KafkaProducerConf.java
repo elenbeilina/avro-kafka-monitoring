@@ -2,17 +2,15 @@ package com.aqualen.avrokafkaaquarium.conf;
 
 import com.aqualen.Shark;
 import io.confluent.kafka.serializers.KafkaAvroSerializer;
-import org.apache.kafka.clients.producer.ProducerConfig;
+import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.kafka.core.DefaultKafkaProducerFactory;
-import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.kafka.core.ProducerFactory;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Properties;
+
+import static org.apache.kafka.clients.producer.ProducerConfig.*;
 
 @Configuration
 public class KafkaProducerConf {
@@ -23,24 +21,23 @@ public class KafkaProducerConf {
     private String registry;
 
     @Bean
-    public Map<String, Object> producerConfigs() {
-        Map<String, Object> props = new HashMap<>();
+    public Properties generate() {
+        Properties properties = new Properties();
 
-        props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
-        props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
-        props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, KafkaAvroSerializer.class);
-        props.put("schema.registry.url", registry);
+        // Kafka Properties
+        properties.setProperty(BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
+        properties.setProperty(ACKS_CONFIG, "all");
+        properties.setProperty(RETRIES_CONFIG, "10");
+        // Avro properties
+        properties.setProperty(KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
+        properties.setProperty(VALUE_SERIALIZER_CLASS_CONFIG, KafkaAvroSerializer.class.getName());
+        properties.setProperty("schema.registry.url", registry);
 
-        return props;
+        return properties;
     }
 
     @Bean
-    public ProducerFactory<String, Shark> producerFactory() {
-        return new DefaultKafkaProducerFactory<>(producerConfigs());
-    }
-
-    @Bean
-    public KafkaTemplate<String, Shark> kafkaTemplate() {
-        return new KafkaTemplate<>(producerFactory());
+    public KafkaProducer<String, Shark> kafkaProducer() {
+        return new KafkaProducer<>(generate());
     }
 }

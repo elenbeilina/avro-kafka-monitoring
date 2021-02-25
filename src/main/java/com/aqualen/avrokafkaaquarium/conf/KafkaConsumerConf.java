@@ -29,8 +29,8 @@ public class KafkaConsumerConf {
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, KafkaAvroDeserializer.class);
-        props.put(ConsumerConfig.GROUP_ID_CONFIG, "avro");
         props.put("schema.registry.url", registry);
+        props.put("specific.avro.reader", "true");
 
         return props;
     }
