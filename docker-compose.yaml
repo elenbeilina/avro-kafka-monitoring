@@ -7,9 +7,37 @@ services:
     hostname: aquarium
     container_name: aquarium
     ports:
-      - "8888:8080"
+      - "9000:9000"
+    depends_on:
+      - zookeeper
+      - broker
     networks:
-      - kafka-connect
+      - kafka-streams
+
+  grafana:
+    image: grafana/grafana-oss:8.5.2
+    container_name: grafana
+    volumes:
+      - ./data/grafana:/var/lib/grafana
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_SERVER_DOMAIN=grafana
+    ports:
+      - "3000:3000"
+    networks:
+      - kafka-streams
+
+  prometheus:
+    image: prom/prometheus:v2.35.0
+    container_name: prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./:/etc/prometheus/
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yaml'
+    networks:
+      - kafka-streams
 
   zookeeper:
     image: confluentinc/cp-zookeeper:5.5.2
@@ -21,7 +49,7 @@ services:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
     networks:
-      - kafka-connect
+      - kafka-streams
 
   broker:
     image: confluentinc/cp-server:5.5.2
@@ -51,7 +79,7 @@ services:
       CONFLUENT_METRICS_ENABLE: 'true'
       CONFLUENT_SUPPORT_CUSTOMER_ID: 'anonymous'
     networks:
-      - kafka-connect
+      - kafka-streams
 
   schema-registry:
     image: confluentinc/cp-schema-registry:5.5.2
@@ -66,7 +94,7 @@ services:
       SCHEMA_REGISTRY_HOST_NAME: schema-registry
       SCHEMA_REGISTRY_KAFKASTORE_CONNECTION_URL: 'zookeeper:2181'
     networks:
-      - kafka-connect
+      - kafka-streams
 
   control-center:
     image: confluentinc/cp-enterprise-control-center:5.5.2
@@ -88,7 +116,7 @@ services:
       CONFLUENT_METRICS_TOPIC_REPLICATION: 1
       PORT: 9021
     networks:
-      - kafka-connect
+      - kafka-streams
 
 networks:
-  kafka-connect:
+  kafka-streams:
