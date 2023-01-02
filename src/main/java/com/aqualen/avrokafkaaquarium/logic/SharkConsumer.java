@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class SharkConsumer {
 
-    @KafkaListener(topics = "aquarium", groupId = "russian")
+    @KafkaListener(topics = "aquarium_modified", groupId = "log_consumer")
     public void consume(@Payload Shark message) {
         log.info(String.format("Consumed shark: %s", message));
     }
