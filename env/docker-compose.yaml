@@ -2,18 +2,6 @@ version: '2'
 
 services:
 
-  aquarium:
-    image: avro-kafka-monitoring
-    hostname: aquarium
-    container_name: aquarium
-    ports:
-      - "9000:9000"
-    depends_on:
-      - zookeeper
-      - broker
-    networks:
-      - kafka-streams
-
   grafana:
     image: grafana/grafana-oss:8.5.2
     container_name: grafana

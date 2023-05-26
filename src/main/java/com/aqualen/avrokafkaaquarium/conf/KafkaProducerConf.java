@@ -15,7 +15,7 @@ import static org.apache.kafka.clients.producer.ProducerConfig.*;
 @Configuration
 public class KafkaProducerConf {
 
-    @Value("${bootstrap.url}")
+    @Value("${spring.kafka.streams.bootstrap-servers}")
     private String bootstrapServers;
     @Value("${registry.url}")
     private String registry;

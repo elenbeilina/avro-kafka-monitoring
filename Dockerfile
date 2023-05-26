@@ -1,3 +1,3 @@
 FROM openjdk:17-jdk-alpine
-COPY /target/avro-kafka-shark-1.1.2.jar avro-kafka-shark-1.1.2.jar
-ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-jar","/avro-kafka-shark-1.1.2.jar"]
+COPY /target/avro-kafka-monitoring-*.jar avro-kafka-monitoring-*.jar
+ENTRYPOINT ["java","-Dspring.profiles.active=test","-jar","/avro-kafka-monitoring-*.jar"]
