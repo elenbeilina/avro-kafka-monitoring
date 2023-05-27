@@ -2,31 +2,6 @@ version: '2'
 
 services:
 
-  grafana:
-    image: grafana/grafana-oss:8.5.2
-    container_name: grafana
-    volumes:
-      - ./data/grafana:/var/lib/grafana
-    environment:
-      - GF_SECURITY_ADMIN_PASSWORD=admin
-      - GF_SERVER_DOMAIN=grafana
-    ports:
-      - "3000:3000"
-    networks:
-      - kafka-streams
-
-  prometheus:
-    image: prom/prometheus:v2.35.0
-    container_name: prometheus
-    ports:
-      - "9090:9090"
-    volumes:
-      - ./:/etc/prometheus/
-    command:
-      - '--config.file=/etc/prometheus/prometheus.yaml'
-    networks:
-      - kafka-streams
-
   zookeeper:
     image: confluentinc/cp-zookeeper:5.5.2
     hostname: zookeeper

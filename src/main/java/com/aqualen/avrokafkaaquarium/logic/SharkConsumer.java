@@ -1,6 +1,7 @@
 package com.aqualen.avrokafkaaquarium.logic;
 
 import com.aqualen.Shark;
+import io.micrometer.core.annotation.Timed;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,12 +19,11 @@ import java.util.function.Predicate;
 @NoArgsConstructor
 public class SharkConsumer {
 
+    Predicate<Metric> lagMetric = metric -> metric.metricName().name().equals("records-lag-max");
     private double consumerLag;
 
-    Predicate<Metric> lagMetric = metric -> metric.metricName().name().equals("records-lag-max");
-
+    @Timed(value = "shark.consumer", description = "Time that took consumer to process the record.")
     @KafkaListener(topics = "aquarium_modified", groupId = "log_consumer")
-
     public void consume(@Payload Shark message, Consumer<String, Shark> consumer) {
         consumerLag = (Double) consumer.metrics().values().stream()
                 .filter(lagMetric)

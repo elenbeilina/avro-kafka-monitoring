@@ -15,6 +15,7 @@ public class SharkProducer {
     private final KafkaProducer<String, Shark> producer;
 
     public void sendShark(Shark shark) {
+        log.info("Sending shark: " + shark);
         ProducerRecord<String, Shark> producerRecord = new ProducerRecord<>("aquarium", shark);
 
         producer.send(producerRecord);
